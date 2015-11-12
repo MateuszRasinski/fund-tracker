@@ -13,19 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker;
+package com.github.mateuszrasinski.fundtracker.domain.registry;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseEntity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Entity;
+import lombok.AllArgsConstructor;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = FundTrackerApplication.class)
-public class FundTrackerApplicationTests {
+import javax.money.MonetaryAmount;
+import java.time.ZonedDateTime;
 
-	@Test
-	public void contextLoads() {
-	}
-
+@AllArgsConstructor
+@Entity
+public class Transaction extends BaseEntity {
+    private final Identity fundId;
+    private final MonetaryAmount amount;
+    private final ZonedDateTime date;
 }
