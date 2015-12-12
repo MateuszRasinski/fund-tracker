@@ -15,13 +15,14 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.user;
 
-import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId;
+import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseAggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 import lombok.Getter;
 
-import java.util.Collection;
+import javax.money.MonetaryAmount;
+import java.time.ZonedDateTime;
 
 @AggregateRoot
 public class User extends BaseAggregateRoot<UserId> {
@@ -40,11 +41,7 @@ public class User extends BaseAggregateRoot<UserId> {
         this.portfolio = portfolio;
     }
 
-    public Collection<RegistryId> getRegistriesIds() {
-        return portfolio.getRegistriesIds();
-    }
-
-    public void addRegistry(RegistryId registryId) {
-        portfolio.addRegistry(registryId);
+    public void registerFundPurchase(Fund fund, MonetaryAmount amount, ZonedDateTime date) {
+        portfolio.registerFundPurchase(fund, amount, date);
     }
 }

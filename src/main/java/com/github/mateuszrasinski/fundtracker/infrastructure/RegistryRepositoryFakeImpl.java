@@ -18,7 +18,6 @@ package com.github.mateuszrasinski.fundtracker.infrastructure;
 import com.github.mateuszrasinski.fundtracker.domain.registry.Registry;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
-import com.github.mateuszrasinski.fundtracker.domain.user.User;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
 
 import java.util.Collection;
@@ -40,10 +39,5 @@ public class RegistryRepositoryFakeImpl implements RegistryRepository {
     @Override
     public void save(Registry registry) {
         registries.put(registry.identity(), registry);
-    }
-
-    @Override
-    public Stream<Registry> findAllOfUser(User user) {
-        return findAll(user.getRegistriesIds());
     }
 }

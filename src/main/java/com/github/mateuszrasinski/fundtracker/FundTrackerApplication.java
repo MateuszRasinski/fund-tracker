@@ -18,6 +18,7 @@ package com.github.mateuszrasinski.fundtracker;
 import com.github.mateuszrasinski.fundtracker.application.PurchaseFundService;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
+import com.github.mateuszrasinski.fundtracker.domain.user.PortfolioFactory;
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository;
 import com.github.mateuszrasinski.fundtracker.infrastructure.FundRepositoryFakeImpl;
 import com.github.mateuszrasinski.fundtracker.infrastructure.RegistryRepositoryFakeImpl;
@@ -47,6 +48,11 @@ public class FundTrackerApplication {
     @Bean
     PurchaseFundService purchaseFundService() {
         return new PurchaseFundService();
+    }
+
+    @Bean
+    PortfolioFactory portfolioFactory(RegistryRepository registryRepository) {
+        return new PortfolioFactory(registryRepository);
     }
 
     public static void main(String[] args) {

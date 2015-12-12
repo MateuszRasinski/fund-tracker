@@ -13,13 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.domain.registry;
+package com.github.mateuszrasinski.fundtracker.sharedkernel.annotation;
 
-import java.util.Collection;
-import java.util.stream.Stream;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface RegistryRepository {
-    Stream<Registry> findAll(Collection<RegistryId> registriesIds);
-
-    void save(Registry registry);
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface DomainFactory {
 }

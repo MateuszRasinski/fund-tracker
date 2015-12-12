@@ -34,7 +34,7 @@ class UserBuilder {
     }
 
     UserBuilder withPortfolio(Portfolio portfolio) {
-         this.portfolio = portfolio
+        this.portfolio = portfolio
         return this
     }
 }

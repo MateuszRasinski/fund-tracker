@@ -22,6 +22,7 @@ import com.github.mateuszrasinski.fundtracker.domain.fund.FundName
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository
 import com.github.mateuszrasinski.fundtracker.domain.user.Portfolio
+import com.github.mateuszrasinski.fundtracker.domain.user.PortfolioFactory
 import com.github.mateuszrasinski.fundtracker.domain.user.User
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository
 import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice
@@ -52,9 +53,12 @@ class PurchasingFundsTest extends AcceptanceTestSpecification {
     @Autowired
     RegistryRepository registryRepository
 
+    @Autowired
+    PortfolioFactory portfolioFactory
+
     def "should purchasing a new fund by the user add that fund to the user's portfolio"() {
         given:
-            Portfolio portfolioWithoutFunds = new Portfolio([] as Set)
+            Portfolio portfolioWithoutFunds = portfolioFactory.create()
             User user = existsUser(aUser().withPortfolio(portfolioWithoutFunds).build())
             Fund fund = existsFund(aFund())
             MonetaryAmount amount = Money.of(500.00, "PLN")

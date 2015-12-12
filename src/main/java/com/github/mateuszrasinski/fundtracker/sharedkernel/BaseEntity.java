@@ -22,13 +22,14 @@ import lombok.ToString;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 @Component
 @Scope("prototype")
 @Getter
 @ToString
-public abstract class BaseEntity<ID extends BaseIdentity> {
+public abstract class BaseEntity<ID extends BaseIdentity> implements Serializable {
 
     @NonNull
     private final Field identityField;
