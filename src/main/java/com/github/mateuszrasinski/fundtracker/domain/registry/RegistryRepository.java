@@ -15,6 +15,7 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
+import com.github.mateuszrasinski.fundtracker.domain.user.User;
 import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
 
 import java.util.Collection;
@@ -24,4 +25,6 @@ public interface RegistryRepository {
     Stream<Registry> findAll(Collection<Identity> registriesIds);
 
     void save(Registry registry);
+
+    Stream<Registry> findAllOfUser(User user);
 }

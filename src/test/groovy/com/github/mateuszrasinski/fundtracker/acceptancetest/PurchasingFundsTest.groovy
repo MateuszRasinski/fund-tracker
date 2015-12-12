@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.github.mateuszrasinski.fundtracker.acceptancetest
-
 import com.github.mateuszrasinski.fundtracker.AcceptanceTestSpecification
 import com.github.mateuszrasinski.fundtracker.FundTrackerApplication
 import com.github.mateuszrasinski.fundtracker.application.PurchaseFundService
@@ -22,7 +21,6 @@ import com.github.mateuszrasinski.fundtracker.domain.fund.Fund
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundName
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository
-import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryService
 import com.github.mateuszrasinski.fundtracker.domain.user.Portfolio
 import com.github.mateuszrasinski.fundtracker.domain.user.User
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository
@@ -56,7 +54,7 @@ class PurchasingFundsTest extends AcceptanceTestSpecification {
 
     def "should purchasing a new fund by the user add that fund to the user's portfolio"() {
         given:
-            Portfolio portfolioWithoutFunds = new Portfolio([], new RegistryService(registryRepository))
+            Portfolio portfolioWithoutFunds = new Portfolio([] as Set)
             User user = existsUser(aUser().withPortfolio(portfolioWithoutFunds).build())
             Fund fund = existsFund(aFund())
             MonetaryAmount amount = Money.of(500.00, "PLN")
