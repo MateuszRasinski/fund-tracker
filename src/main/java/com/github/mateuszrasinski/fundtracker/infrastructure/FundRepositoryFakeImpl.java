@@ -16,8 +16,8 @@
 package com.github.mateuszrasinski.fundtracker.infrastructure;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
+import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,10 @@ public class FundRepositoryFakeImpl implements FundRepository {
     private final List<Fund> funds = new ArrayList<>();
 
     @Override
-    public Optional<Fund> find(Identity fundId) {
+    public Optional<Fund> find(FundId fundId) {
         return funds
                 .stream()
-                .filter(fund -> fund.getIdentity().equals(fundId))
+                .filter(fund -> fund.identity().equals(fundId))
                 .findAny();
     }
 

@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.domain.fund;
+package com.github.mateuszrasinski.fundtracker.sharedkernel;
 
-import java.util.Optional;
+import lombok.NonNull;
 
-public interface FundRepository {
-    Optional<Fund> find(FundId fundId);
+import java.util.UUID;
 
-    Fund save(Fund fund);
+public abstract class BaseIdentity {
+
+    @NonNull
+    private final String value;
+
+    protected BaseIdentity() {
+        value = generate();
+    }
+
+    private static String generate() {
+        return UUID.randomUUID().toString();
+    }
 }

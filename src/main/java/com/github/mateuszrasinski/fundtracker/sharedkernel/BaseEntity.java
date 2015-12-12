@@ -15,25 +15,69 @@
  */
 package com.github.mateuszrasinski.fundtracker.sharedkernel;
 
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
-import lombok.EqualsAndHashCode;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+
 @Component
 @Scope("prototype")
 @Getter
-@EqualsAndHashCode
 @ToString
-public abstract class BaseEntity {
+public abstract class BaseEntity<ID extends BaseIdentity> {
 
     @NonNull
-    protected final Identity identity;
+    private final Field identityField;
 
     protected BaseEntity() {
-        identity = Identity.generate();
+        identityField = discoverIdentityField(getClass());
+    }
+
+    private static Field discoverIdentityField(Class clazz) {
+        Field discoveredBaseIdentityField = null;
+        for (Field field : clazz.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(Identity.class)) {
+                break;
+            }
+            if (discoveredBaseIdentityField != null) {
+                throw new IllegalStateException("Only one field can be annotated with " + Identity.class);
+            }
+            discoveredBaseIdentityField = field;
+            discoveredBaseIdentityField.setAccessible(true);
+        }
+        return discoveredBaseIdentityField;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ID identity() {
+        try {
+            return (ID) identityField.get(this);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BaseEntity)) {
+            return false;
+        }
+
+        BaseEntity<?> that = (BaseEntity<?>) o;
+
+        return identity().equals(that.identity());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return identity().hashCode();
     }
 }

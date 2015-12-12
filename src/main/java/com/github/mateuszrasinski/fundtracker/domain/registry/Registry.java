@@ -16,10 +16,9 @@
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseAggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
-import lombok.AllArgsConstructor;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -27,9 +26,11 @@ import javax.money.MonetaryAmount;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@AllArgsConstructor
 @AggregateRoot
-public class Registry extends BaseAggregateRoot {
+public class Registry extends BaseAggregateRoot<RegistryId> {
+
+    @Identity
+    private final RegistryId registryId;
 
     @Getter
     @NonNull
@@ -37,12 +38,18 @@ public class Registry extends BaseAggregateRoot {
 
     @Getter
     @NonNull
-    private final List<Identity> transactionsIds;
+    private final List<TransactionId> transactionsIds;
+
+    public Registry(Fund fund, List<TransactionId> transactionIds) {
+        this.registryId = new RegistryId();
+        this.fund = fund;
+        this.transactionsIds = transactionIds;
+    }
 
     public void addTransaction(MonetaryAmount amount, ZonedDateTime date) {
         //TODO: TransactionFactory
-        Transaction transaction = new Transaction(fund.getIdentity(), amount, date);
-        transactionsIds.add(transaction.getIdentity());
+        Transaction transaction = new Transaction(fund.identity(), amount, date);
+        transactionsIds.add(transaction.identity());
         //TODO: transactionAddedEvent()
     }
 }

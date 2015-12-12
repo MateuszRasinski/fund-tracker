@@ -15,28 +15,36 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.user;
 
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
+import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseAggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
-import lombok.AllArgsConstructor;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 import lombok.Getter;
 
 import java.util.Collection;
 
-@AllArgsConstructor
 @AggregateRoot
-public class User extends BaseAggregateRoot {
+public class User extends BaseAggregateRoot<UserId> {
+
+    @Identity
+    private final UserId userId;
 
     private final UserData userData;
 
     @Getter
     private final Portfolio portfolio;
 
-    public Collection<Identity> getRegistriesIds() {
+    public User(UserData userData, Portfolio portfolio) {
+        this.userId = new UserId();
+        this.userData = userData;
+        this.portfolio = portfolio;
+    }
+
+    public Collection<RegistryId> getRegistriesIds() {
         return portfolio.getRegistriesIds();
     }
 
-    public void addRegistry(Identity registryId) {
+    public void addRegistry(RegistryId registryId) {
         portfolio.addRegistry(registryId);
     }
 }

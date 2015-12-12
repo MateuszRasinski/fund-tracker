@@ -60,13 +60,13 @@ class PurchasingFundsTest extends AcceptanceTestSpecification {
             MonetaryAmount amount = Money.of(500.00, "PLN")
             ZonedDateTime date = LocalDate.of(2015, Month.APRIL, 15).atStartOfDay(ZoneId.systemDefault())
         when:
-            purchaseFundService.registerFundPurchase(user.identity, fund.identity, amount, date)
+            purchaseFundService.registerFundPurchase(user.identity(), fund.identity(), amount, date)
         then:
             usersPortfolioHasFund(user, fund)
     }
 
     void usersPortfolioHasFund(User user, Fund fund) {
-        User updatedUser = userRepository.find(user.identity).get()
+        User updatedUser = userRepository.find(user.identity()).get()
         assert registryRepository.findAll(updatedUser.portfolio.registriesIds)
                 .anyMatch { registry -> registry.fund.equals(fund) }
     }

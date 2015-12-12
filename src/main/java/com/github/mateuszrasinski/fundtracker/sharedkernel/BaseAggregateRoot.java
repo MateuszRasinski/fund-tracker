@@ -18,5 +18,5 @@ package com.github.mateuszrasinski.fundtracker.sharedkernel;
 import lombok.ToString;
 
 @ToString(callSuper = true)
-public abstract class BaseAggregateRoot extends BaseEntity {
+public abstract class BaseAggregateRoot<ID extends BaseIdentity> extends BaseEntity<ID> {
 }

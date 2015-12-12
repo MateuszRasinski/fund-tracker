@@ -13,24 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.publishedlanguage;
+package com.github.mateuszrasinski.fundtracker.domain.registry;
 
-import lombok.NonNull;
-import lombok.Value;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.ValueObject;
 
-import java.util.UUID;
-
-@Value
-public class Identity {
-
-    @NonNull
-    private final String identity;
-
-    public Identity(String identity) {
-        this.identity = identity;
-    }
-
-    public static Identity generate() {
-        return new Identity(UUID.randomUUID().toString());
-    }
+@ValueObject
+public class TransactionId extends BaseIdentity {
 }

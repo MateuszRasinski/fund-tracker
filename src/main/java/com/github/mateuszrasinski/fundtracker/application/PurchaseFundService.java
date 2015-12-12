@@ -1,12 +1,13 @@
 package com.github.mateuszrasinski.fundtracker.application;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
+import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
 import com.github.mateuszrasinski.fundtracker.domain.registry.Registry;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
 import com.github.mateuszrasinski.fundtracker.domain.user.User;
+import com.github.mateuszrasinski.fundtracker.domain.user.UserId;
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.money.MonetaryAmount;
@@ -24,7 +25,7 @@ public class PurchaseFundService {
     @Autowired
     private RegistryRepository registryRepository;
 
-    public void registerFundPurchase(Identity userId, Identity fundId, MonetaryAmount amount, ZonedDateTime date) {
+    public void registerFundPurchase(UserId userId, FundId fundId, MonetaryAmount amount, ZonedDateTime date) {
         User user = userRepository.find(userId).orElseThrow(RuntimeException::new);
         Fund fund = fundRepository.find(fundId).orElseThrow(RuntimeException::new);
         Registry registry = registryRepository.findAllOfUser(user)
@@ -39,7 +40,7 @@ public class PurchaseFundService {
     private Registry createNewRegistry(User user, Fund fund) {
         //TODO: RegistryFactory
         Registry registry = new Registry(fund, new ArrayList<>());
-        user.addRegistry(registry.getIdentity());
+        user.addRegistry(registry.identity());
         return registry;
     }
 }

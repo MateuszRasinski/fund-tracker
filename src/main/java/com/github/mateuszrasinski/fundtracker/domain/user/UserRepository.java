@@ -15,12 +15,10 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.user;
 
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
-
 import java.util.Optional;
 
 public interface UserRepository {
-    Optional<User> find(Identity userId);
+    Optional<User> find(UserId userId);
 
     User save(User user);
 }

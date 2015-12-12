@@ -16,9 +16,10 @@
 package com.github.mateuszrasinski.fundtracker.infrastructure;
 
 import com.github.mateuszrasinski.fundtracker.domain.registry.Registry;
+import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
 import com.github.mateuszrasinski.fundtracker.domain.user.User;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,19 +27,19 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class RegistryRepositoryFakeImpl implements RegistryRepository {
-    Map<Identity, Registry> registries = new HashMap<>();
+    Map<BaseIdentity, Registry> registries = new HashMap<>();
 
     @Override
-    public Stream<Registry> findAll(Collection<Identity> registriesIds) {
+    public Stream<Registry> findAll(Collection<RegistryId> registriesIds) {
         return registries
                 .values()
                 .stream()
-                .filter(registry -> registriesIds.contains(registry.getIdentity()));
+                .filter(registry -> registriesIds.contains(registry.identity()));
     }
 
     @Override
     public void save(Registry registry) {
-        registries.put(registry.getIdentity(), registry);
+        registries.put(registry.identity(), registry);
     }
 
     @Override

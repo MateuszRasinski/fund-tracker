@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.domain.fund;
+package com.github.mateuszrasinski.fundtracker.domain.user;
 
-import java.util.Optional;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.ValueObject;
 
-public interface FundRepository {
-    Optional<Fund> find(FundId fundId);
-
-    Fund save(Fund fund);
+@ValueObject
+public class PortfolioId extends BaseIdentity {
 }

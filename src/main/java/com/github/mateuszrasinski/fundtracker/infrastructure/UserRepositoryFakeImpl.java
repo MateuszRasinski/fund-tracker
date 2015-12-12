@@ -16,24 +16,25 @@
 package com.github.mateuszrasinski.fundtracker.infrastructure;
 
 import com.github.mateuszrasinski.fundtracker.domain.user.User;
+import com.github.mateuszrasinski.fundtracker.domain.user.UserId;
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class UserRepositoryFakeImpl implements UserRepository {
-    private final Map<Identity, User> users = new HashMap<>();
+    private final Map<BaseIdentity, User> users = new HashMap<>();
 
     @Override
-    public Optional<User> find(Identity userId) {
+    public Optional<User> find(UserId userId) {
         return Optional.ofNullable(users.get(userId));
     }
 
     @Override
     public User save(User user) {
-        users.put(user.getIdentity(), user);
+        users.put(user.identity(), user);
         return user;
     }
 }

@@ -16,7 +16,6 @@
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class RegistryService {
 
     private RegistryRepository registryRepository;
 
-    public Optional<Registry> loadRegistry(List<Identity> registriesIds, Fund fund) {
+    public Optional<Registry> loadRegistry(List<RegistryId> registriesIds, Fund fund) {
         return registryRepository.findAll(registriesIds)
                 .filter(registry -> registry.getFund().equals(fund))
                 .findAny();

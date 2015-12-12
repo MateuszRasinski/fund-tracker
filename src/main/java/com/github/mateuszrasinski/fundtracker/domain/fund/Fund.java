@@ -16,15 +16,22 @@
 package com.github.mateuszrasinski.fundtracker.domain.fund;
 
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseAggregateRoot;
-import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice;
-import lombok.AllArgsConstructor;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 
 import java.util.List;
 
-@AllArgsConstructor
 @AggregateRoot
-public class Fund extends BaseAggregateRoot {
+public class Fund extends BaseAggregateRoot<FundId> {
+    @Identity
+    private final FundId fundId;
     private final FundName name;
     private final List<UnitPrice> unitPrices;
+
+    public Fund(FundName name, List<UnitPrice> unitPrices) {
+        this.fundId = new FundId();
+        this.name = name;
+        this.unitPrices = unitPrices;
+    }
 }

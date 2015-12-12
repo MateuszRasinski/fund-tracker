@@ -15,18 +15,26 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
+import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseEntity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Entity;
-import lombok.AllArgsConstructor;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 
 import javax.money.MonetaryAmount;
 import java.time.ZonedDateTime;
 
-@AllArgsConstructor
 @Entity
-public class Transaction extends BaseEntity {
-    private final Identity fundId;
+public class Transaction extends BaseEntity<TransactionId> {
+    @Identity
+    private final TransactionId transactionId;
+    private final FundId fundId;
     private final MonetaryAmount amount;
     private final ZonedDateTime date;
+
+    public Transaction(FundId fundId, MonetaryAmount amount, ZonedDateTime date) {
+        this.transactionId = new TransactionId();
+        this.fundId = fundId;
+        this.amount = amount;
+        this.date = date;
+    }
 }

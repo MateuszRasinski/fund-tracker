@@ -15,10 +15,9 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.fund;
 
-import java.util.Optional;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.ValueObject;
 
-public interface FundRepository {
-    Optional<Fund> find(FundId fundId);
-
-    Fund save(Fund fund);
+@ValueObject
+public class FundId extends BaseIdentity {
 }

@@ -15,24 +15,31 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.user;
 
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
+import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseEntity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Entity;
-import lombok.AllArgsConstructor;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.Set;
 
-@AllArgsConstructor
 @Entity
-public class Portfolio extends BaseEntity {
+public class Portfolio extends BaseEntity<PortfolioId> {
+
+    @Identity
+    private final PortfolioId portfolioId;
 
     @Getter
     @NonNull
-    private final Set<Identity> registriesIds;
+    private final Set<RegistryId> registriesIds;
 
-    public void addRegistry(Identity registryId) {
+    public Portfolio(Set<RegistryId> registriesIds) {
+        this.portfolioId = new PortfolioId();
+        this.registriesIds = registriesIds;
+    }
+
+    public void addRegistry(RegistryId registryId) {
         registriesIds.add(registryId);
     }
 }

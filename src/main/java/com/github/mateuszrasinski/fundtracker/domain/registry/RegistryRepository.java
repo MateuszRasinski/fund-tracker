@@ -16,13 +16,12 @@
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
 import com.github.mateuszrasinski.fundtracker.domain.user.User;
-import com.github.mateuszrasinski.fundtracker.publishedlanguage.Identity;
 
 import java.util.Collection;
 import java.util.stream.Stream;
 
 public interface RegistryRepository {
-    Stream<Registry> findAll(Collection<Identity> registriesIds);
+    Stream<Registry> findAll(Collection<RegistryId> registriesIds);
 
     void save(Registry registry);
 
