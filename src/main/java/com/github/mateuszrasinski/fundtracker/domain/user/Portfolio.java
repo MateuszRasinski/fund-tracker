@@ -15,24 +15,16 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.user;
 
-import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
-import com.github.mateuszrasinski.fundtracker.domain.registry.Registry;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId;
-import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseEntity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Entity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 
-import javax.money.MonetaryAmount;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Entity
 public class Portfolio extends BaseEntity<PortfolioId> {
 
@@ -43,25 +35,12 @@ public class Portfolio extends BaseEntity<PortfolioId> {
     @NonNull
     private final Set<RegistryId> registriesIds;
 
-    private final RegistryRepository registryRepository;
-
-    void registerFundPurchase(Fund fund, MonetaryAmount amount, ZonedDateTime date) {
-        Registry registry = findOrCreateNewFor(fund);
-        registry.addTransaction(amount, date);
-        registryRepository.save(registry);
+    public Portfolio() {
+        this.portfolioId = new PortfolioId();
+        this.registriesIds = new HashSet<>();
     }
 
-    private Registry findOrCreateNewFor(Fund fund) {
-        return registryRepository.findAll(registriesIds)
-                                 .filter(r -> r.getFund().equals(fund))
-                                 .findAny()
-                                 .orElseGet(() -> createNewRegistry(fund));
-    }
-
-    private Registry createNewRegistry(Fund fund) {
-        //TODO: RegistryFactory
-        Registry registry = new Registry(fund, new ArrayList<>());
-        registriesIds.add(registry.identity());
-        return registry;
+    void addRegistry(RegistryId registryId) {
+        registriesIds.add(registryId);
     }
 }

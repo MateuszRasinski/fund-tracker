@@ -15,14 +15,16 @@
  */
 package com.github.mateuszrasinski.fundtracker;
 
+import com.github.mateuszrasinski.fundtracker.application.PurchaseFundListener;
 import com.github.mateuszrasinski.fundtracker.application.PurchaseFundService;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
-import com.github.mateuszrasinski.fundtracker.domain.user.PortfolioFactory;
+import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryService;
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository;
 import com.github.mateuszrasinski.fundtracker.infrastructure.FundRepositoryFakeImpl;
 import com.github.mateuszrasinski.fundtracker.infrastructure.RegistryRepositoryFakeImpl;
 import com.github.mateuszrasinski.fundtracker.infrastructure.UserRepositoryFakeImpl;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.DomainEventPublisher;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -46,13 +48,23 @@ public class FundTrackerApplication {
     }
 
     @Bean
+    RegistryService registryService(RegistryRepository registryRepository) {
+        return new RegistryService(registryRepository);
+    }
+
+    @Bean
     PurchaseFundService purchaseFundService() {
         return new PurchaseFundService();
     }
 
     @Bean
-    PortfolioFactory portfolioFactory(RegistryRepository registryRepository) {
-        return new PortfolioFactory(registryRepository);
+    PurchaseFundListener purchaseFundListener() {
+        return new PurchaseFundListener();
+    }
+
+    @Bean
+    DomainEventPublisher domainEventPublisher() {
+        return new DomainEventPublisher();
     }
 
     public static void main(String[] args) {

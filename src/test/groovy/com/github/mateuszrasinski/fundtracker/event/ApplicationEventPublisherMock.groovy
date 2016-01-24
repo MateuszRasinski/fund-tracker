@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.sharedkernel;
+package com.github.mateuszrasinski.fundtracker.event
 
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.ToString;
+import org.springframework.context.ApplicationEvent
+import org.springframework.context.ApplicationEventPublisher
 
-import java.util.UUID;
+public class ApplicationEventPublisherMock implements ApplicationEventPublisher {
+    List<Object> events = []
 
-@EqualsAndHashCode
-@ToString
-public abstract class BaseIdentity {
-
-    @NonNull
-    private final String value;
-
-    protected BaseIdentity() {
-        value = generate();
+    @Override
+    public void publishEvent(ApplicationEvent event) {
+        publishEvent((Object) event);
     }
 
-    private static String generate() {
-        return UUID.randomUUID().toString();
+    @Override
+    public void publishEvent(Object event) {
+        events.add(event)
+    }
+
+    public Object lastEvent() {
+        return events.last()
     }
 }

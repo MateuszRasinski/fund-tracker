@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.acceptancetest
-
-import com.github.mateuszrasinski.fundtracker.domain.user.Email
-import com.github.mateuszrasinski.fundtracker.domain.user.Portfolio
-import com.github.mateuszrasinski.fundtracker.domain.user.User
-import com.github.mateuszrasinski.fundtracker.domain.user.UserData
+package com.github.mateuszrasinski.fundtracker.domain.user
 
 import java.time.ZonedDateTime
 
 class UserBuilder {
-    Portfolio portfolio
+    Portfolio portfolio = new Portfolio()
 
-    static UserBuilder aUser() {
+    static UserBuilder user() {
         return new UserBuilder()
     }
 
@@ -33,8 +28,12 @@ class UserBuilder {
         return new User(new UserData('Jan Kowalski', new Email('jan@kowalski.com'), ZonedDateTime.now()), portfolio)
     }
 
-    UserBuilder withPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio
+    static User aUser() {
+        return user().build()
+    }
+
+    UserBuilder withoutRegistries() {
+        this.portfolio = new Portfolio()
         return this
     }
 }

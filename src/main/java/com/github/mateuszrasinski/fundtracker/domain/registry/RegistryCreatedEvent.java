@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker
+package com.github.mateuszrasinski.fundtracker.domain.registry;
 
-import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import com.github.mateuszrasinski.fundtracker.domain.user.UserId;
+import lombok.Value;
 
-@ContextConfiguration(loader = SpringApplicationContextLoader)
-abstract class AcceptanceTestSpecification extends Specification {
+import java.io.Serializable;
+
+@Value
+public class RegistryCreatedEvent implements Serializable {
+    private final UserId userId;
+    private final RegistryId registryId;
 }

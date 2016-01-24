@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.sharedkernel.annotation;
+package com.github.mateuszrasinski.fundtracker.testutil
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.javamoney.moneta.Money
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface DomainFactory {
+import javax.money.MonetaryAmount
+import java.time.LocalDate
+import java.time.Month
+import java.time.ZoneId
+import java.time.ZonedDateTime
+
+class Fixtures {
+    static MonetaryAmount anAmount() {
+        Money.of(500.00, "PLN")
+    }
+
+    static ZonedDateTime aDate() {
+        LocalDate.of(2015, Month.APRIL, 15).atStartOfDay(ZoneId.systemDefault())
+    }
 }

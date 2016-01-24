@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.domain.registry;
+package com.github.mateuszrasinski.fundtracker.event
 
-import com.github.mateuszrasinski.fundtracker.domain.user.User;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.DomainEventPublisher
+import spock.lang.Specification
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Stream;
+abstract class EventTestSpecification extends Specification {
+    protected ApplicationEventPublisherMock eventPublisherMock
 
-public interface RegistryRepository {
-    Stream<Registry> findAll(Collection<RegistryId> registriesIds);
-
-    void save(Registry registry);
-
-    Stream<Registry> findAllByUser(User user);
-
-    Optional<Registry> find(RegistryId registryId);
+    def setup() {
+        eventPublisherMock = Spy(ApplicationEventPublisherMock)
+        new DomainEventPublisher().setApplicationEventPublisher(eventPublisherMock)
+    }
 }

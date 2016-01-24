@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,20 @@
  */
 package com.github.mateuszrasinski.fundtracker.sharedkernel;
 
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.ToString;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
-import java.util.UUID;
+import java.io.Serializable;
 
-@EqualsAndHashCode
-@ToString
-public abstract class BaseIdentity {
+public class DomainEventPublisher implements ApplicationEventPublisherAware {
+    private static ApplicationEventPublisher eventPublisher;
 
-    @NonNull
-    private final String value;
-
-    protected BaseIdentity() {
-        value = generate();
+    public static void publish(Serializable event) {
+        eventPublisher.publishEvent(event);
     }
 
-    private static String generate() {
-        return UUID.randomUUID().toString();
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        eventPublisher = applicationEventPublisher;
     }
 }

@@ -16,24 +16,26 @@
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
-import lombok.AllArgsConstructor;
+import com.github.mateuszrasinski.fundtracker.domain.user.User;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.DomainEventPublisher;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.DomainService;
+import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.Optional;
-
-//TODO: DomainService
-@AllArgsConstructor
+@DomainService
+@RequiredArgsConstructor
 public class RegistryService {
+    private final RegistryRepository registryRepository;
 
-    private RegistryRepository registryRepository;
-
-    public Optional<Registry> loadRegistry(List<RegistryId> registriesIds, Fund fund) {
-        return registryRepository.findAll(registriesIds)
-                .filter(registry -> registry.getFund().equals(fund))
-                .findAny();
+    public Registry findOrCreate(User user, Fund fund) {
+        return registryRepository.findAllByUser(user)
+                .filter(r -> r.getFund().equals(fund))
+                .findAny()
+                .orElseGet(() -> createNewRegistry(user, fund));
     }
 
-    public void save(Registry registry) {
-        registryRepository.save(registry);
+    private Registry createNewRegistry(User user, Fund fund) {
+        Registry registry = new Registry(fund);
+        DomainEventPublisher.publish(new RegistryCreatedEvent(user.identity(), registry.identity()));
+        return registry;
     }
 }

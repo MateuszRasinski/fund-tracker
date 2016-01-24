@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 package com.github.mateuszrasinski.fundtracker.acceptancetest
-import com.github.mateuszrasinski.fundtracker.AcceptanceTestSpecification
+
 import com.github.mateuszrasinski.fundtracker.FundTrackerApplication
 import com.github.mateuszrasinski.fundtracker.application.PurchaseFundService
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund
-import com.github.mateuszrasinski.fundtracker.domain.fund.FundName
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository
+import com.github.mateuszrasinski.fundtracker.domain.registry.Registry
+import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository
-import com.github.mateuszrasinski.fundtracker.domain.user.Portfolio
-import com.github.mateuszrasinski.fundtracker.domain.user.PortfolioFactory
 import com.github.mateuszrasinski.fundtracker.domain.user.User
+import com.github.mateuszrasinski.fundtracker.domain.user.UserId
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository
-import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice
-import org.javamoney.moneta.Money
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
 
 import javax.money.MonetaryAmount
-import java.time.LocalDate
-import java.time.Month
-import java.time.ZoneId
 import java.time.ZonedDateTime
 
-import static com.github.mateuszrasinski.fundtracker.acceptancetest.UserBuilder.aUser
+import static com.github.mateuszrasinski.fundtracker.domain.fund.FundBuilder.aFund
+import static com.github.mateuszrasinski.fundtracker.domain.user.UserBuilder.aUser
+import static com.github.mateuszrasinski.fundtracker.domain.user.UserBuilder.user
+import static com.github.mateuszrasinski.fundtracker.testutil.Fixtures.aDate
+import static com.github.mateuszrasinski.fundtracker.testutil.Fixtures.anAmount
 
 @ContextConfiguration(classes = FundTrackerApplication)
 class PurchasingFundsTest extends AcceptanceTestSpecification {
@@ -53,37 +52,69 @@ class PurchasingFundsTest extends AcceptanceTestSpecification {
     @Autowired
     RegistryRepository registryRepository
 
-    @Autowired
-    PortfolioFactory portfolioFactory
-
-    def "should purchasing a new fund by the user add that fund to the user's portfolio"() {
+    def "should purchasing a new fund by the user add new registry with that fund to the user's registries"() {
         given:
-            Portfolio portfolioWithoutFunds = portfolioFactory.create()
-            User user = existsUser(aUser().withPortfolio(portfolioWithoutFunds).build())
-            Fund fund = existsFund(aFund())
-            MonetaryAmount amount = Money.of(500.00, "PLN")
-            ZonedDateTime date = LocalDate.of(2015, Month.APRIL, 15).atStartOfDay(ZoneId.systemDefault())
+        User user = existsUser(user().withoutRegistries().build())
+        Fund fund = existsFund(aFund())
+
         when:
-            purchaseFundService.registerFundPurchase(user.identity(), fund.identity(), amount, date)
+        purchaseFundService.registerFundPurchase(user.identity(), fund.identity(), anAmount(), aDate())
+
         then:
-            usersPortfolioHasFund(user, fund)
+        existsUserRegistry(user.identity(), fund)
     }
 
-    void usersPortfolioHasFund(User user, Fund fund) {
-        User updatedUser = userRepository.find(user.identity()).get()
-        assert registryRepository.findAll(updatedUser.portfolio.registriesIds)
-                .anyMatch { registry -> registry.fund.equals(fund) }
+    def "should purchasing a new fund by the user create new transaction in user's registry"() {
+        given:
+        User user = existsUser(aUser())
+        Fund fund = existsFund(aFund())
+
+        when:
+        purchaseFundService.registerFundPurchase(user.identity(), fund.identity(), anAmount(), aDate())
+
+        then:
+        existsTransactionInUserRegistry(user.identity(), fund, anAmount(), aDate())
     }
 
-    User existsUser(User user) {
+    def "should add registry for user"() {
+        given:
+        User user = existsUser(aUser())
+        RegistryId registryId = new RegistryId()
+
+        when:
+        purchaseFundService.addRegistryForUser(user.identity(), registryId)
+
+        then:
+        existsUserWithRegistryId(user.identity(), registryId)
+    }
+
+    private void existsUserWithRegistryId(UserId userId, RegistryId registryId) {
+        User user = userRepository.find(userId).get()
+        assert user.registriesIds.contains(registryId)
+    }
+
+    private void existsUserRegistry(UserId userId, Fund fund) {
+        assert findUserRegistry(userId, fund).isPresent()
+    }
+
+    private void existsTransactionInUserRegistry(UserId userId, Fund fund, MonetaryAmount amount, ZonedDateTime date) {
+        Registry registry = findUserRegistry(userId, fund).get()
+        assert registry.transactions.stream()
+                .anyMatch { transaction -> transaction.hasSame(fund.identity(), amount, date) }
+    }
+
+    private Optional<Registry> findUserRegistry(UserId userId, Fund fund) {
+        User user = userRepository.find(userId).get()
+        return registryRepository.findAll(user.registriesIds)
+                .filter { registry -> registry.fund.equals(fund) }
+                .findAny()
+    }
+
+    private User existsUser(User user) {
         return userRepository.save(user)
     }
 
-    Fund existsFund(Fund fund) {
+    private Fund existsFund(Fund fund) {
         return fundRepository.save(fund)
-    }
-
-    Fund aFund() {
-        return new Fund(new FundName('JAPAN'), [new UnitPrice(Money.of(2.50, 'PLN'), ZonedDateTime.now())])
     }
 }

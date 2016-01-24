@@ -19,11 +19,13 @@ import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseEntity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Entity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
+import lombok.ToString;
 
 import javax.money.MonetaryAmount;
 import java.time.ZonedDateTime;
 
 @Entity
+@ToString
 public class Transaction extends BaseEntity<TransactionId> {
     @Identity
     private final TransactionId transactionId;
@@ -36,5 +38,9 @@ public class Transaction extends BaseEntity<TransactionId> {
         this.fundId = fundId;
         this.amount = amount;
         this.date = date;
+    }
+
+    public boolean hasSame(FundId fundId, MonetaryAmount amount, ZonedDateTime date) {
+        return this.date.equals(date) && this.amount.equals(amount) && this.fundId.equals(fundId);
     }
 }

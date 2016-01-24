@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker
+package com.github.mateuszrasinski.fundtracker.domain.user
 
-import com.github.mateuszrasinski.fundtracker.acceptancetest.AcceptanceTestSpecification
-import org.springframework.test.context.ContextConfiguration
+import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryId
+import spock.lang.Specification
 
-@ContextConfiguration(classes = FundTrackerApplication)
-class FundTrackerApplicationTests extends AcceptanceTestSpecification {
-    def 'contextLoads'() {
-        expect: true
+import static UserBuilder.user
+
+class UserTest extends Specification {
+    def "should get new registry after adding it"() {
+        given:
+            User user = user().withoutRegistries().build()
+            RegistryId registryId = new RegistryId()
+        when:
+            user.addRegistry(registryId)
+        then:
+            user.registriesIds == [registryId] as Set
     }
 }

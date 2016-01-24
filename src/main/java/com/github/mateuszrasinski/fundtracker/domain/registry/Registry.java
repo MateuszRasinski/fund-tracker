@@ -24,7 +24,8 @@ import lombok.NonNull;
 
 import javax.money.MonetaryAmount;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @AggregateRoot
 public class Registry extends BaseAggregateRoot<RegistryId> {
@@ -38,18 +39,16 @@ public class Registry extends BaseAggregateRoot<RegistryId> {
 
     @Getter
     @NonNull
-    private final List<TransactionId> transactionsIds;
+    private final Set<Transaction> transactions;
 
-    public Registry(Fund fund, List<TransactionId> transactionIds) {
+    public Registry(Fund fund) {
         this.registryId = new RegistryId();
         this.fund = fund;
-        this.transactionsIds = transactionIds;
+        this.transactions = new HashSet<>();
     }
 
     public void addTransaction(MonetaryAmount amount, ZonedDateTime date) {
-        //TODO: TransactionFactory
         Transaction transaction = new Transaction(fund.identity(), amount, date);
-        transactionsIds.add(transaction.identity());
-        //TODO: transactionAddedEvent()
+        transactions.add(transaction);
     }
 }

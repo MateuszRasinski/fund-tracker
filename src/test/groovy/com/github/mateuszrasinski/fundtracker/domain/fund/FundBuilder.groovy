@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.domain.registry;
+package com.github.mateuszrasinski.fundtracker.domain.fund
 
-import com.github.mateuszrasinski.fundtracker.domain.user.User;
+import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice
+import org.javamoney.moneta.Money
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Stream;
+import java.time.ZonedDateTime
 
-public interface RegistryRepository {
-    Stream<Registry> findAll(Collection<RegistryId> registriesIds);
+class FundBuilder {
 
-    void save(Registry registry);
+    static FundBuilder fund() {
+        return new FundBuilder()
+    }
 
-    Stream<Registry> findAllByUser(User user);
+    Fund build() {
+        return new Fund(new FundName('JAPAN'), [new UnitPrice(Money.of(2.50, 'PLN'), ZonedDateTime.now())])
+    }
 
-    Optional<Registry> find(RegistryId registryId);
+    static Fund aFund() {
+        return fund().build()
+    }
 }

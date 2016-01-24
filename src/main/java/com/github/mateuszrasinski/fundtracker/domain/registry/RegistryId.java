@@ -17,7 +17,9 @@ package com.github.mateuszrasinski.fundtracker.domain.registry;
 
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseIdentity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.ValueObject;
+import lombok.ToString;
 
 @ValueObject
+@ToString(callSuper = true)
 public class RegistryId extends BaseIdentity {
 }

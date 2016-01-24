@@ -16,23 +16,18 @@
 package com.github.mateuszrasinski.fundtracker.sharedkernel;
 
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
-@Component
-@Scope("prototype")
-@Getter
 @ToString
 public abstract class BaseEntity<ID extends BaseIdentity> implements Serializable {
 
     @NonNull
     private final Field identityField;
+    private ID identityValue;
 
     protected BaseEntity() {
         identityField = discoverIdentityField(getClass());
@@ -53,8 +48,15 @@ public abstract class BaseEntity<ID extends BaseIdentity> implements Serializabl
         return discoveredBaseIdentityField;
     }
 
-    @SuppressWarnings("unchecked")
     public ID identity() {
+        if (identityValue == null) {
+            identityValue = identityValue();
+        }
+        return identityValue;
+    }
+
+    @SuppressWarnings("unchecked")
+    private ID identityValue() {
         try {
             return (ID) identityField.get(this);
         } catch (IllegalAccessException e) {
