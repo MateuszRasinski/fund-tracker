@@ -111,10 +111,13 @@ class PurchasingFundsTest extends AcceptanceTestSpecification {
     }
 
     private User existsUser(User user) {
-        return userRepository.save(user)
+        User savedUser = userRepository.save(user)
+        assert savedUser
+        return savedUser
     }
 
     private Fund existsFund(Fund fund) {
-        return fundRepository.save(fund)
+        fundRepository.save([fund])
+        return fundRepository.find(fund.identity()).orElseThrow { new AssertionError("Fund doesn't exist") }
     }
 }

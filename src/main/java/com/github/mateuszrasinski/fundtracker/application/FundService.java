@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.infrastructure;
+package com.github.mateuszrasinski.fundtracker.application;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
-import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
+import com.github.mateuszrasinski.fundtracker.infrastructure.fund.FundLoader;
+import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
-public class FundRepositoryFakeImpl implements FundRepository {
-    private final List<Fund> funds = new ArrayList<>();
+@RequiredArgsConstructor
+public class FundService {
+    private final FundLoader fundLoader;
+    private final FundRepository fundRepository;
 
-    @Override
-    public Optional<Fund> find(FundId fundId) {
-        return funds
-                .stream()
-                .filter(fund -> fund.identity().equals(fundId))
-                .findAny();
-    }
-
-    @Override
-    public Fund save(Fund fund) {
-        funds.add(fund);
-        return fund;
+    public void reloadFunds() {
+        Set<Fund> funds = fundLoader.loadFunds();
+        fundRepository.save(funds);
     }
 }

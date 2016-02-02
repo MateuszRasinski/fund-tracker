@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,16 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.fund;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+public enum SupportedFund {
+    JAPAN("Japonia");
 
-public interface FundRepository {
-    Stream<Fund> findAll();
+    private final String fundName;
 
-    Optional<Fund> find(FundId fundId);
+    SupportedFund(String fundName) {
+        this.fundName = fundName;
+    }
 
-    void save(Iterable<Fund> funds);
+    public String fundName() {
+        return fundName;
+    }
 }

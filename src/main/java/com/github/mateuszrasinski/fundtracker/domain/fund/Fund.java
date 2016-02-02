@@ -19,19 +19,28 @@ import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseAggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
+import lombok.Getter;
+import lombok.ToString;
 
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 @AggregateRoot
+@ToString
 public class Fund extends BaseAggregateRoot<FundId> {
     @Identity
     private final FundId fundId;
+    @Getter
     private final FundName name;
-    private final List<UnitPrice> unitPrices;
+    private final Set<UnitPrice> unitPrices;
 
-    public Fund(FundName name, List<UnitPrice> unitPrices) {
+    public Fund(String fundName, Set<UnitPrice> unitPrices) {
         this.fundId = new FundId();
-        this.name = name;
+        this.name = new FundName(fundName);
         this.unitPrices = unitPrices;
+    }
+
+    public Set<UnitPrice> getUnitPrices() {
+        return Collections.unmodifiableSet(unitPrices);
     }
 }

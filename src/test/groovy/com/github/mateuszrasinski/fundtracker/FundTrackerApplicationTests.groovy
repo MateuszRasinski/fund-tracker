@@ -16,9 +16,7 @@
 package com.github.mateuszrasinski.fundtracker
 
 import com.github.mateuszrasinski.fundtracker.acceptancetest.AcceptanceTestSpecification
-import org.springframework.test.context.ContextConfiguration
 
-@ContextConfiguration(classes = FundTrackerApplication)
 class FundTrackerApplicationTests extends AcceptanceTestSpecification {
     def 'contextLoads'() {
         expect: true

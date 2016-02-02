@@ -15,10 +15,11 @@
  */
 package com.github.mateuszrasinski.fundtracker.acceptancetest
 
+import com.github.mateuszrasinski.fundtracker.FundTrackerApplication
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
-@ContextConfiguration(loader = SpringApplicationContextLoader)
+@ContextConfiguration(loader = SpringApplicationContextLoader, classes = FundTrackerApplication)
 abstract class AcceptanceTestSpecification extends Specification {
 }

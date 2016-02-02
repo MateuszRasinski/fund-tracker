@@ -17,13 +17,19 @@ package com.github.mateuszrasinski.fundtracker.sharedkernel;
 
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.ValueObject;
 import lombok.Value;
+import org.javamoney.moneta.Money;
 
 import javax.money.MonetaryAmount;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 
 @Value
 @ValueObject
 public class UnitPrice {
     private final MonetaryAmount price;
-    private final ZonedDateTime date;
+    private final Instant date;
+
+    public UnitPrice(Number priceValue, Instant date) {
+        this.price = Money.of(priceValue, "PLN");
+        this.date = date;
+    }
 }
