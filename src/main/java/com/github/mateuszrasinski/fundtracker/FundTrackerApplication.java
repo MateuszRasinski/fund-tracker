@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,13 @@ import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryRepository;
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryService;
 import com.github.mateuszrasinski.fundtracker.domain.user.UserRepository;
-import com.github.mateuszrasinski.fundtracker.infrastructure.RegistryRepositoryFakeImpl;
-import com.github.mateuszrasinski.fundtracker.infrastructure.UserRepositoryFakeImpl;
-import com.github.mateuszrasinski.fundtracker.infrastructure.fund.FileFundLoader;
-import com.github.mateuszrasinski.fundtracker.infrastructure.fund.FundLoader;
-import com.github.mateuszrasinski.fundtracker.infrastructure.fund.FundRepositoryFakeImpl;
-import com.github.mateuszrasinski.fundtracker.infrastructure.fund.FundsLocations;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.RegistryRepositoryFakeImpl;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.UserRepositoryFakeImpl;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.fund.FileFundLoader;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.fund.FundLoader;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.fund.FundRepositoryFakeImpl;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.fund.FundsLocations;
+import com.github.mateuszrasinski.fundtracker.infrastructure.scheduling.SchedulingProperties;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.DomainEventPublisher;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,6 +36,9 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
+
+import java.util.concurrent.ScheduledExecutorService;
 
 @SpringBootApplication
 public class FundTrackerApplication {
@@ -72,6 +76,16 @@ public class FundTrackerApplication {
     @Bean
     FundService fundService(FundLoader fundLoader, FundRepository fundRepository) {
         return new FundService(fundLoader, fundRepository);
+    }
+
+    @Bean
+    SchedulingProperties schedulingProperties() {
+        return new SchedulingProperties();
+    }
+
+    @Bean
+    ScheduledExecutorService scheduledExecutorService() {
+        return new ScheduledExecutorFactoryBean().getObject();
     }
 
     @Bean

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.infrastructure.fund;
+package com.github.mateuszrasinski.fundtracker.infrastructure.persistence.fund;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;

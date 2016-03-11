@@ -17,7 +17,7 @@ package com.github.mateuszrasinski.fundtracker.application;
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund;
 import com.github.mateuszrasinski.fundtracker.domain.fund.FundRepository;
-import com.github.mateuszrasinski.fundtracker.infrastructure.fund.FundLoader;
+import com.github.mateuszrasinski.fundtracker.infrastructure.persistence.fund.FundLoader;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Set;

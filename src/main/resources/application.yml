@@ -1,2 +1,5 @@
 funds:
     japan: classpath:funds/japan.json
+
+scheduling:
+  fundRefreshInSeconds: 5
