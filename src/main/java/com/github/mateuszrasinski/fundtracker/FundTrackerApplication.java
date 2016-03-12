@@ -36,11 +36,13 @@ import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean;
 
 import java.util.concurrent.ScheduledExecutorService;
 
 @SpringBootApplication
+@EnableAsync
 public class FundTrackerApplication {
 
     @Bean

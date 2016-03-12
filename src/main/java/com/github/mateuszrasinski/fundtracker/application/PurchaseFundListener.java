@@ -16,9 +16,11 @@
 package com.github.mateuszrasinski.fundtracker.application;
 
 import com.github.mateuszrasinski.fundtracker.domain.registry.RegistryCreatedEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+@Slf4j
 public class PurchaseFundListener {
     @Autowired
     private PurchaseFundService purchaseFundService;

@@ -39,9 +39,9 @@ class FundServiceTest extends AcceptanceTestSpecification {
         assert fund
         fund.name.name == SupportedFund.JAPAN.fundName()
         fund.unitPrices.sort() == [
-                new UnitPrice(143.6900, Instant.ofEpochMilli(1382486400000)),
-                new UnitPrice(145.1000, Instant.ofEpochMilli(1382572800000)),
-                new UnitPrice(142.4000, Instant.ofEpochMilli(1382659200000))
+                new UnitPrice(143.6900, fund.currency, Instant.ofEpochMilli(1382486400000)),
+                new UnitPrice(145.1000, fund.currency, Instant.ofEpochMilli(1382572800000)),
+                new UnitPrice(142.4000, fund.currency, Instant.ofEpochMilli(1382659200000))
         ].sort()
     }
 }

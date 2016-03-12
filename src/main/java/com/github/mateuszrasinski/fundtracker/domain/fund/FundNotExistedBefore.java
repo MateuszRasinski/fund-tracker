@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.mateuszrasinski.fundtracker.sharedkernel;
+package com.github.mateuszrasinski.fundtracker.domain.fund;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.time.ZonedDateTime;
 
-import java.util.UUID;
-
-@EqualsAndHashCode
-@ToString
-public abstract class BaseIdentity {
-
-    private final String value;
-
-    protected BaseIdentity() {
-        value = generate();
-    }
-
-    private static String generate() {
-        return UUID.randomUUID().toString();
+public class FundNotExistedBefore extends RuntimeException {
+    public FundNotExistedBefore(FundName name, ZonedDateTime date) {
+        super("Fund: '" + name.getName() + "' has not existed before '" + date + "'");
     }
 }

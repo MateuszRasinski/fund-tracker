@@ -20,9 +20,14 @@ import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.AggregateRoot;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
+import org.springframework.util.Assert;
 
+import javax.money.CurrencyUnit;
+import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 
 @AggregateRoot
@@ -32,15 +37,36 @@ public class Fund extends BaseAggregateRoot<FundId> {
     private final FundId fundId;
     @Getter
     private final FundName name;
+    @Getter
+    private final CurrencyUnit currency;
     private final Set<UnitPrice> unitPrices;
 
-    public Fund(String fundName, Set<UnitPrice> unitPrices) {
-        this.fundId = new FundId();
-        this.name = new FundName(fundName);
+    public Fund(@NonNull String fundName, @NonNull CurrencyUnit fundCurrency, @NonNull Set<UnitPrice> unitPrices) {
+        fundId = new FundId();
+        name = new FundName(fundName);
+        currency = fundCurrency;
+        Assert.notEmpty(unitPrices);
         this.unitPrices = unitPrices;
     }
 
     public Set<UnitPrice> getUnitPrices() {
         return Collections.unmodifiableSet(unitPrices);
+    }
+
+//    public UnitPrice currentUnitPrice() {
+//        return unitPrices.stream()
+//                .max(unitPriceDateComparator())
+//                .orElseThrow(IllegalStateException::new);
+//    }
+
+    public UnitPrice unitPriceOn(ZonedDateTime date) {
+        return unitPrices.stream()
+                .filter(unitPrice -> !unitPrice.getDate().isAfter(date.toInstant()))
+                .max(unitPriceDateComparator())
+                .orElseThrow(() -> new FundNotExistedBefore(name, date));
+    }
+
+    private static Comparator<UnitPrice> unitPriceDateComparator() {
+        return (up1, up2) -> up1.getDate().compareTo(up2.getDate());
     }
 }

@@ -16,23 +16,74 @@
 package com.github.mateuszrasinski.fundtracker.domain.registry
 
 import com.github.mateuszrasinski.fundtracker.domain.fund.Fund
-import spock.lang.Specification
+import com.github.mateuszrasinski.fundtracker.event.EventTestSpecification
 
+import javax.money.MonetaryAmount
+import java.time.ZonedDateTime
+
+import static com.github.mateuszrasinski.fundtracker.domain.fund.FundBuilder.aFund
 import static com.github.mateuszrasinski.fundtracker.domain.fund.FundBuilder.fund
 import static com.github.mateuszrasinski.fundtracker.testutil.Fixtures.aDate
 import static com.github.mateuszrasinski.fundtracker.testutil.Fixtures.anAmount
 
-class RegistryTest extends Specification {
+class RegistryTest extends EventTestSpecification {
     def 'should get new transaction after adding it'() {
         given:
-            Fund fund = fund().build()
-            Registry registry = new Registry(fund)
+        Fund fund = aFund()
+        Registry registry = new Registry(fund)
+
         expect:
-            registry.getTransactions().isEmpty()
+        registry.getTransactions().isEmpty()
+
         when:
-            registry.addTransaction(anAmount(), aDate())
+        registry.addTransaction(anAmount(), aDate())
+
         then:
-            Transaction transaction = registry.getTransactions()[0]
-            transaction.hasSame(fund.identity(), anAmount(), aDate())
+        Transaction transaction = registry.getTransactions().first()
+        transaction.hasSame(fund.identity(), anAmount(), aDate())
+    }
+
+    def 'should publish TransactionAddedEvent while adding transaction'() {
+        given:
+        Fund fund = aFund()
+        Registry registry = new Registry(fund)
+        MonetaryAmount amount = anAmount()
+        ZonedDateTime date = aDate()
+
+        when:
+        registry.addTransaction(amount, date)
+
+        then:
+        1 * eventPublisherMock.publishEvent(_ as TransactionAddedEvent)
+        TransactionAddedEvent lastEvent = (TransactionAddedEvent) eventPublisherMock.lastEvent()
+        lastEvent.transactionId != null
+        lastEvent.fundId == fund.identity()
+        lastEvent.amount == amount
+        lastEvent.date == date
+    }
+
+    def 'should increase unit count while adding transaction'() {
+        given:
+        ZonedDateTime date = aDate()
+        MonetaryAmount amount = anAmount()
+        Fund fund = fund().withFirstUnitPriceDate(date).build()
+        Registry registry = new Registry(fund)
+
+        expect:
+        BigDecimal initUnitCount = BigDecimal.ZERO
+        registry.unitCount == initUnitCount
+
+        when:
+        registry.addTransaction(amount, date)
+
+        then:
+        registry.unitCount.compareTo(initUnitCount) > 0
+        BigDecimal unitCountAfterFirstTransaction = registry.unitCount
+
+        when:
+        registry.addTransaction(amount, date.plusDays(1))
+
+        then:
+        registry.unitCount.compareTo(unitCountAfterFirstTransaction) > 0
     }
 }

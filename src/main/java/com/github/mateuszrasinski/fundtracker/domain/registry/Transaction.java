@@ -19,26 +19,32 @@ import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.BaseEntity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Entity;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.Identity;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import javax.money.MonetaryAmount;
 import java.time.ZonedDateTime;
 
 @Entity
+@RequiredArgsConstructor
 @ToString
 public class Transaction extends BaseEntity<TransactionId> {
-    @Identity
-    private final TransactionId transactionId;
-    private final FundId fundId;
-    private final MonetaryAmount amount;
-    private final ZonedDateTime date;
 
-    public Transaction(FundId fundId, MonetaryAmount amount, ZonedDateTime date) {
-        this.transactionId = new TransactionId();
-        this.fundId = fundId;
-        this.amount = amount;
-        this.date = date;
-    }
+    @Identity
+    private final TransactionId transactionId = new TransactionId();
+
+    @NonNull
+    private final FundId fundId;
+
+    @Getter
+    @NonNull
+    private final MonetaryAmount amount;
+
+    @Getter
+    @NonNull
+    private final ZonedDateTime date;
 
     public boolean hasSame(FundId fundId, MonetaryAmount amount, ZonedDateTime date) {
         return this.date.equals(date) && this.amount.equals(amount) && this.fundId.equals(fundId);

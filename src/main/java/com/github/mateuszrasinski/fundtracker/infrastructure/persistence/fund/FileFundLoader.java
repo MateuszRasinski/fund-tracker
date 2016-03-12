@@ -25,6 +25,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StreamUtils;
 
+import javax.money.CurrencyUnit;
 import java.io.IOError;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -51,13 +52,14 @@ public class FileFundLoader implements FundLoader {
 
     private Fund loadFund(SupportedFund supportedFund) {
         String jsonLocation = fundsLocations.getJsonLocation(supportedFund);
-        return new Fund(supportedFund.fundName(), loadUnitPrices(jsonLocation));
+        CurrencyUnit fundCurrency = supportedFund.currency();
+        return new Fund(supportedFund.fundName(), fundCurrency, loadUnitPrices(jsonLocation, fundCurrency));
     }
 
-    private Set<UnitPrice> loadUnitPrices(String jsonLocation) {
+    private Set<UnitPrice> loadUnitPrices(String jsonLocation, CurrencyUnit fundCurrency) {
         Set<UnitPrice> unitPrices = unitPricesJsonList(jsonLocation)
                 .stream()
-                .map(FileFundLoader::unitPriceFrom)
+                .map(unitPriceAsList -> FileFundLoader.unitPriceFrom(unitPriceAsList, fundCurrency))
                 .collect(Collectors.toSet());
         log.info("UnitPrices: {}", unitPrices);
         return unitPrices;
@@ -76,9 +78,9 @@ public class FileFundLoader implements FundLoader {
         return (List<List<Number>>) unitPricesJsonList.get(1);
     }
 
-    private static UnitPrice unitPriceFrom(List<Number> unitPriceAsList) {
+    private static UnitPrice unitPriceFrom(List<Number> unitPriceAsList, CurrencyUnit fundCurrency) {
         Number priceValue = unitPriceAsList.get(1);
         long epochMilli = unitPriceAsList.get(0).longValue();
-        return new UnitPrice(priceValue, Instant.ofEpochMilli(epochMilli));
+        return new UnitPrice(priceValue, fundCurrency, Instant.ofEpochMilli(epochMilli));
     }
 }

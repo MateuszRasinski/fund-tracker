@@ -17,6 +17,8 @@ package com.github.mateuszrasinski.fundtracker.testutil
 
 import org.javamoney.moneta.Money
 
+import javax.money.CurrencyUnit
+import javax.money.Monetary
 import javax.money.MonetaryAmount
 import java.time.LocalDate
 import java.time.Month
@@ -25,10 +27,14 @@ import java.time.ZonedDateTime
 
 class Fixtures {
     static MonetaryAmount anAmount() {
-        Money.of(500.00, "PLN")
+        Money.of(new BigDecimal("500"), aCurrency())
     }
 
     static ZonedDateTime aDate() {
         LocalDate.of(2015, Month.APRIL, 15).atStartOfDay(ZoneId.systemDefault())
+    }
+
+    static CurrencyUnit aCurrency() {
+        Monetary.getCurrency("PLN")
     }
 }

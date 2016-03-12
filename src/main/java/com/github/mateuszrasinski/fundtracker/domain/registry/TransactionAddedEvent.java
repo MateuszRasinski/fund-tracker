@@ -15,18 +15,20 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.registry;
 
-import com.github.mateuszrasinski.fundtracker.domain.user.UserId;
+import com.github.mateuszrasinski.fundtracker.domain.fund.FundId;
 import com.github.mateuszrasinski.fundtracker.sharedkernel.DomainEvent;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import javax.money.MonetaryAmount;
+import java.time.ZonedDateTime;
 
 @RequiredArgsConstructor
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class RegistryCreatedEvent extends DomainEvent {
-    private final UserId userId;
-    private final RegistryId registryId;
+public class TransactionAddedEvent extends DomainEvent {
+    private final @NonNull TransactionId transactionId;
+    private final @NonNull FundId fundId;
+    private final @NonNull MonetaryAmount amount;
+    private final @NonNull ZonedDateTime date;
 }

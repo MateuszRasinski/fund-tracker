@@ -15,16 +15,25 @@
  */
 package com.github.mateuszrasinski.fundtracker.domain.fund;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+
 public enum SupportedFund {
-    JAPAN("Japonia");
+    JAPAN("Japonia", "PLN");
 
     private final String fundName;
+    private final CurrencyUnit currency;
 
-    SupportedFund(String fundName) {
+    SupportedFund(String fundName, String currencyCode) {
         this.fundName = fundName;
+        this.currency = Monetary.getCurrency(currencyCode);
     }
 
     public String fundName() {
         return fundName;
+    }
+
+    public CurrencyUnit currency() {
+        return currency;
     }
 }

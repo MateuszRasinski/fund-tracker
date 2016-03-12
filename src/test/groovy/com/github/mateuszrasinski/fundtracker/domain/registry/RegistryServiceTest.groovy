@@ -58,6 +58,8 @@ class RegistryServiceTest extends EventTestSpecification {
         then:
         assert foundRegistry
         1 * eventPublisherMock.publishEvent(_ as RegistryCreatedEvent)
-        eventPublisherMock.lastEvent() == new RegistryCreatedEvent(user.identity(), foundRegistry.identity())
+        RegistryCreatedEvent lastEvent = (RegistryCreatedEvent) eventPublisherMock.lastEvent()
+        lastEvent.userId == user.identity()
+        lastEvent.registryId == foundRegistry.identity()
     }
 }

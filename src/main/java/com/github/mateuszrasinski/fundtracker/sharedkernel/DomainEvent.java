@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Mateusz Rasiński
+ * Copyright 2016 Mateusz Rasiński
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,18 @@ package com.github.mateuszrasinski.fundtracker.sharedkernel;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.io.Serializable;
+import java.time.Instant;
 import java.util.UUID;
 
 @EqualsAndHashCode
 @ToString
-public abstract class BaseIdentity {
+public abstract class DomainEvent implements Serializable {
+    private final String id;
+    private final Instant timestamp;
 
-    private final String value;
-
-    protected BaseIdentity() {
-        value = generate();
-    }
-
-    private static String generate() {
-        return UUID.randomUUID().toString();
+    protected DomainEvent() {
+        id = UUID.randomUUID().toString();
+        timestamp = Instant.now();
     }
 }

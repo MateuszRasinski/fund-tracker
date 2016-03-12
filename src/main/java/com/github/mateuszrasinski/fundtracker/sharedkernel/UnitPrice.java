@@ -19,7 +19,9 @@ import com.github.mateuszrasinski.fundtracker.sharedkernel.annotation.ValueObjec
 import lombok.Value;
 import org.javamoney.moneta.Money;
 
+import javax.money.CurrencyUnit;
 import javax.money.MonetaryAmount;
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Value
@@ -28,8 +30,12 @@ public class UnitPrice {
     private final MonetaryAmount price;
     private final Instant date;
 
-    public UnitPrice(Number priceValue, Instant date) {
-        this.price = Money.of(priceValue, "PLN");
+    public UnitPrice(Number priceValue, CurrencyUnit currency, Instant date) {
+        this.price = Money.of(priceValue, currency);
         this.date = date;
+    }
+
+    public BigDecimal value() {
+        return price.getNumber().numberValue(BigDecimal.class);
     }
 }

@@ -17,19 +17,38 @@ package com.github.mateuszrasinski.fundtracker.domain.fund
 
 import com.github.mateuszrasinski.fundtracker.sharedkernel.UnitPrice
 
-import java.time.Instant
+import javax.money.CurrencyUnit
+import javax.money.Monetary
+import java.time.ZonedDateTime
+
+import static com.github.mateuszrasinski.fundtracker.testutil.Fixtures.aDate
 
 class FundBuilder {
+
+    private CurrencyUnit currency = Monetary.getCurrency("PLN")
+    private ZonedDateTime firstUnitPriceDate = aDate()
+    private Set<UnitPrice> unitPrices = [new UnitPrice(2.50, currency, firstUnitPriceDate.toInstant())] as Set
 
     static FundBuilder fund() {
         return new FundBuilder()
     }
 
     Fund build() {
-        return new Fund('Japonia', [new UnitPrice(2.50, Instant.now())] as Set)
+        return new Fund('Japonia', currency, unitPrices)
     }
 
     static Fund aFund() {
         return fund().build()
+    }
+
+    FundBuilder withFirstUnitPriceDate(ZonedDateTime firstUnitPriceDate) {
+        this.firstUnitPriceDate = firstUnitPriceDate
+        unitPrices = [new UnitPrice(2.50, currency, firstUnitPriceDate.toInstant())] as Set
+        return this
+    }
+
+    FundBuilder withUnitPrices(UnitPrice... unitPrices) {
+        this.unitPrices = unitPrices as Set
+        return this
     }
 }

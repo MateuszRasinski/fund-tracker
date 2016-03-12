@@ -25,7 +25,7 @@ import spock.lang.Specification
 
 @SpringBootApplication
 @Import(FundReloadingScheduler)
-class SchedulingTestSpecification extends Specification {
+abstract class SchedulingTestSpecification extends Specification {
 
     @Bean
     FundService fundService(InvocationsCount invocationsCount) {
